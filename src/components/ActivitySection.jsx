@@ -8,8 +8,6 @@ import jsPDFInvoiceTemplate, { OutputType } from 'jspdf-invoice-template';
 
 import Swal from "sweetalert2";
 
-import db from "../../db.json";
-
 import { toast } from 'sonner'
 
 const ActivitySection = () => {
@@ -97,95 +95,103 @@ const ActivitySection = () => {
 
 
 
-    function generateActivityPDF(activityAccessCode, userId) {
-        // Encontrar a atividade pelo código de acesso
-        const activity = db.activities.find(act => act.accessCode === activityAccessCode);
-        if (!activity) {
-            console.error('Atividade não encontrada com o código de acesso fornecido.');
-            toast.warning('Atividade não encontrada com o código de acesso fornecido.');
-            return;
-        }
+    async function generateActivityPDF(activityAccessCode, userId) {
+        try {
+            // Buscar atividade no backend
+            const activityResponse = await fetch(`${import.meta.env.VITE_API_URL}/activities?accessCode=${activityAccessCode}`);
+            const activities = await activityResponse.json();
+            if (activities.length === 0) {
+                toast.warning('Atividade não encontrada com o código de acesso fornecido.');
+                return;
+            }
+            const activity = activities[0];
     
-        // Encontrar todas as respostas para a atividade
-        const responses = db.responses.filter(resp => resp.activityId === activity.id);
-        if (responses.length === 0) {
-            console.error('Respostas não encontradas para a atividade fornecida.');
-            toast.warning('Respostas não encontradas para a atividade fornecida.');
-            return;
-        }
+            // Buscar respostas no backend
+            const responsesResponse = await fetch(`${import.meta.env.VITE_API_URL}/responses?activityId=${activity.id}`);
+            const responses = await responsesResponse.json();
+            if (responses.length === 0) {
+                toast.warning('Respostas não encontradas para a atividade fornecida.');
+                return;
+            }
     
-        // Encontrar o usuário que respondeu
-        const respondingUser = db.users.find(usr => usr.id === userId);
-        if (!respondingUser) {
-            console.error('Usuário não encontrado com o ID fornecido.');
-            toast.warning('Usuário não encontrado com o ID fornecido.');
-            return;
-        }
+            // Buscar usuário no backend
+            const userResponse = await fetch(`${import.meta.env.VITE_API_URL}/users?id=${userId}`);
+            const users = await userResponse.json();
+            if (users.length === 0) {
+                toast.warning('Usuário não encontrado com o ID fornecido.');
+                return;
+            }
+            const respondingUser = users[0];
     
-        const currentDate = new Date();
-        const formattedDate = currentDate.toLocaleDateString();
-        const formattedTime = currentDate.toLocaleTimeString();
+            const currentDate = new Date();
+            const formattedDate = currentDate.toLocaleDateString();
+            const formattedTime = currentDate.toLocaleTimeString();
     
-        // Gerar PDF com as respostas
-        const props = {
-            outputType: OutputType.DataUriString,
-            returnJsPDFDocObject: true,
-            fileName: "Activity Response",
-            orientationLandscape: false,
-            logo: {
-                src: "https://raw.githubusercontent.com/Danielalves33147/Imagens/main/TOKEN(4).png",
-                type: 'PNG',
-                width: 53.33,
-                height: 26.66
-            },
-            business: {
-                name: "A tool for English learning",
-                address: "Camaçari / Bahia / Brasil",
-                phone: "Plataforma desenvolvida em 2023",
-                email: "suporte@lovelace.com",
-            },
-            contact: {
-                label: `Responsável: ${respondingUser.name}`,
-            },
-            invoice: {
-                label: "Código de Acesso: ",
-                num: `${activity.accessCode}`, // Atualizado para exibir o código de acesso
-                invDate: `Data de Impressão: ${formattedDate}`,
-                invGenDate: `Horário: ${formattedTime}`,
-                header: [
-                    { title: "Aluno(a)", style: { width: 50 } },
-                    { title: "Respostas", style: { width: 100 } },
-                    { title: "Data", style: { width: 25 } },
-                    { title: "Hora", style: { width: 25 } }
-                ],
-                table: responses.map((response) => [
-                    response.user,
-                    response.answers.map(answer => answer.text).join(", "),
-                    new Date(response.date).toLocaleDateString(),
-                    new Date(response.date).toLocaleTimeString()
-                ]),
-                tableStyles: {
-                    cellPadding: 10,
-                    padding: { top: 10, bottom: 10 },
+            // Gerar PDF com as respostas
+            const props = {
+                outputType: OutputType.DataUriString,
+                returnJsPDFDocObject: true,
+                fileName: "Activity Response",
+                orientationLandscape: false,
+                logo: {
+                    src: "https://raw.githubusercontent.com/Danielalves33147/Imagens/main/TOKEN(4).png",
+                    type: 'PNG',
+                    width: 53.33,
+                    height: 26.66
                 },
-            },
-            footer: {
-                text: "Lovelace Copyright 2024.",
-            },
-            pageEnable: true,
-        };
+                business: {
+                    name: "A tool for English learning",
+                    address: "Camaçari / Bahia / Brasil",
+                    phone: "Plataforma desenvolvida em 2023",
+                    email: "suporte@lovelace.com",
+                },
+                contact: {
+                    label: `Responsável: ${respondingUser.name}`,
+                },
+                invoice: {
+                    label: "Código de Acesso: ",
+                    num: `${activity.accessCode}`,
+                    invDate: `Data de Impressão: ${formattedDate}`,
+                    invGenDate: `Horário: ${formattedTime}`,
+                    header: [
+                        { title: "Aluno(a)", style: { width: 50 } },
+                        { title: "Respostas", style: { width: 100 } },
+                        { title: "Data", style: { width: 25 } },
+                        { title: "Hora", style: { width: 25 } }
+                    ],
+                    table: responses.map((response) => [
+                        response.user,
+                        response.answers.map(answer => answer.text).join(", "),
+                        new Date(response.date).toLocaleDateString(),
+                        new Date(response.date).toLocaleTimeString()
+                    ]),
+                    tableStyles: {
+                        cellPadding: 10,
+                        padding: { top: 10, bottom: 10 },
+                    },
+                },
+                footer: {
+                    text: "Lovelace Copyright 2024.",
+                },
+                pageEnable: true,
+            };
     
-        const pdfObject = jsPDFInvoiceTemplate(props);
-        const pdfDataUri = pdfObject.dataUriString;
+            const pdfObject = jsPDFInvoiceTemplate(props);
+            const pdfDataUri = pdfObject.dataUriString;
     
-        // Criar uma nova janela para exibir o PDF
-        const newWindow = window.open();
-        newWindow.document.open();
-        newWindow.document.write(`<iframe width='100%' height='100%' src='${pdfDataUri}'></iframe>`);
-        newWindow.document.close();
+            // Criar uma nova janela para exibir o PDF
+            const newWindow = window.open();
+            newWindow.document.open();
+            newWindow.document.write(`<iframe width='100%' height='100%' src='${pdfDataUri}'></iframe>`);
+            newWindow.document.close();
     
-        console.log("PDF criado com sucesso!", pdfObject);
+            console.log("PDF criado com sucesso!", pdfObject);
+        } catch (error) {
+            console.error("Erro ao gerar PDF:", error);
+            toast.error("Erro ao gerar o PDF.");
+        }
     }
+    
     
     
 

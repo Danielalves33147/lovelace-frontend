@@ -36,7 +36,7 @@ const ActivitySection = () => {
             }, 7000);
             setTimer(newTimer);
         } else if (accessCode.trim()) {
-            fetch(`http://localhost:4000/activities?accessCode=${accessCode}`)
+            fetch(`${import.meta.env.VITE_API_URL}/activities?accessCode=${accessCode}`)
                 .then((response) => response.json())
                 .then((data) => {
                     if (data.length > 0) {

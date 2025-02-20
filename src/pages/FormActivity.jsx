@@ -87,8 +87,8 @@ function FormActivity({ activity = null }) {
         // Verificar se é criação ou edição
         const method = activity ? 'PUT' : 'POST';
         const url = activity 
-            ? `http://localhost:4000/activities/${activity.id}`
-            : 'http://localhost:4000/activities';
+            ? `${import.meta.env.VITE_API_URL}/activities/${activity.id}`
+            : '${import.meta.env.VITE_API_URL}/activities';
 
         fetch(url, {
             method,
@@ -147,7 +147,7 @@ function FormActivity({ activity = null }) {
                         cancelButtonText: "Cancelar"
                     }).then((confirmResult) => {
                         if (confirmResult.isConfirmed) {
-                            fetch(`http://localhost:4000/activities/${activityId}`, {
+                            fetch(`${import.meta.env.VITE_API_URL}/activities/${activityId}`, {
                                 method: 'DELETE',
                             })
                             .then((resp) => {

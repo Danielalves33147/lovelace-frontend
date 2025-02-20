@@ -7,7 +7,7 @@ function EditActivity() {
     const [activity, setActivity] = useState(null);
 
     useEffect(() => {
-        fetch(`http://localhost:4000/activities/${id}`)
+        fetch(`${import.meta.env.VITE_API_URL}/activities/${id}`)
             .then((resp) => resp.json())
             .then((data) => setActivity(data))
             .catch((err) => console.error('Erro ao carregar a atividade:', err));

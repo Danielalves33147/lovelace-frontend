@@ -78,7 +78,7 @@ const UserProfile = () => {
       return;
     }
 
-    fetch("http://localhost:4000/users")
+    fetch("${import.meta.env.VITE_API_URL}/users")
       .then((resp) => resp.json())
       .then((data) => {
         const userExists = data.some(
@@ -91,7 +91,7 @@ const UserProfile = () => {
             "Este email já está sendo utilizado. Por favor, escolha outro."
           );
         } else {
-          fetch(`http://localhost:4000/users/${user.id}`, {
+          fetch(`${import.meta.env.VITE_API_URL}/users/${user.id}`, {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
@@ -208,29 +208,29 @@ const UserProfile = () => {
   
         // Continue com a exclusão da conta
         // Primeiro, exclua as atividades do usuário
-        const activitiesResponse = await fetch(`http://localhost:4000/activities?userId=${user.uid}`);
+        const activitiesResponse = await fetch(`${import.meta.env.VITE_API_URL}/activities?userId=${user.uid}`);
         const activities = await activitiesResponse.json();
   
         const deleteActivityPromises = activities.map((activity) =>
-          fetch(`http://localhost:4000/activities/${activity.id}`, {
+          fetch(`${import.meta.env.VITE_API_URL}/activities/${activity.id}`, {
             method: "DELETE",
           })
         );
         await Promise.all(deleteActivityPromises);
   
         // Em seguida, exclua as respostas do usuário
-        const responsesResponse = await fetch(`http://localhost:4000/responses?userId=${user.uid}`);
+        const responsesResponse = await fetch(`${import.meta.env.VITE_API_URL}/responses?userId=${user.uid}`);
         const responses = await responsesResponse.json();
   
         const deleteResponsePromises = responses.map((response) =>
-          fetch(`http://localhost:4000/responses/${response.id}`, {
+          fetch(`${import.meta.env.VITE_API_URL}/responses/${response.id}`, {
             method: "DELETE",
           })
         );
         await Promise.all(deleteResponsePromises);
   
         // Exclua os dados do usuário no Firestore, se aplicável
-        await fetch(`http://localhost:4000/users/${user.uid}`, {
+        await fetch(`${import.meta.env.VITE_API_URL}/users/${user.uid}`, {
           method: "DELETE",
         });
   

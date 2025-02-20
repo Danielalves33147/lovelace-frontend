@@ -29,11 +29,11 @@ function ActivityResponses() {
     useEffect(() => {
         const fetchActivityData = async () => {
             try {
-                const activityResponse = await fetch(`http://localhost:4000/activities/${id}`);
+                const activityResponse = await fetch(`${import.meta.env.VITE_API_URL}/activities/${id}`);
                 const activityData = await activityResponse.json();
                 setActivity(activityData);
 
-                const responsesResponse = await fetch(`http://localhost:4000/responses?activityId=${id}`);
+                const responsesResponse = await fetch(`${import.meta.env.VITE_API_URL}/responses?activityId=${id}`);
                 const responsesData = await responsesResponse.json();
                 setResponses(responsesData);
             } catch (err) {

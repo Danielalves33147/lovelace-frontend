@@ -13,7 +13,7 @@ function ActivityGallery() {
         }
         const userId = storedUser ? storedUser.id : null;
         if (userId) {
-            fetch(`http://localhost:4000/activities?userId=${userId}`)
+            fetch(`${import.meta.env.VITE_API_URL}/activities?userId=${userId}`)
                 .then(resp => resp.json())
                 .then(data => setActivities(data))
                 .catch(err => console.log(err));

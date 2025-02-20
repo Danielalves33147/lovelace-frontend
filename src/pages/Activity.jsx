@@ -11,7 +11,7 @@ function Activity() {
     const [iconChanged, setIconChanged] = useState(false);
 
     useEffect(() => {
-        fetch(`http://localhost:4000/activities/${id}`)
+        fetch(`${import.meta.env.VITE_API_URL}/activities/${id}`)
             .then((response) => response.json())
             .then((data) => setActivity(data))
             .catch((err) => console.log(err));

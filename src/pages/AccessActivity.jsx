@@ -29,7 +29,7 @@ useEffect(() => {
 }, [navigate]);
 
 useEffect(() => {
-    fetch(`http://localhost:4000/activities/${id}`)
+    fetch(`${import.meta.env.VITE_API_URL}/activities/${id}`)
         .then(response => response.json())
         .then(data => {
             setActivity(data);
@@ -69,7 +69,7 @@ const submitResponses = (e) => {
         date: new Date().toISOString(),
     };
 
-    fetch('http://localhost:4000/responses', {
+    fetch('${import.meta.env.VITE_API_URL}/responses', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

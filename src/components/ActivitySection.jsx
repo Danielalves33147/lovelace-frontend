@@ -197,8 +197,17 @@ const ActivitySection = () => {
 
     
     function handleCreatePDFByAccessCode(accessCode) {
-        console.log("Atividades disponíveis no banco de dados:", db.activities);
+
+        fetch(`${import.meta.env.VITE_API_URL}/activities`)
+    .then(response => response.json())
+    .then(data => {
+        console.log("Atividades disponíveis no banco de dados:", data);
+    })
+    .catch(error => console.error("Erro ao buscar atividades:", error));
+
+
         console.log("Código de acesso recebido:", accessCode);
+
     
         if (!accessCode) {
             toast.warning("Por favor, insira o código de acesso.");

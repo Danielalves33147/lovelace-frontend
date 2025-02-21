@@ -91,7 +91,7 @@ const submitResponses = (e) => {
     })
     .catch((err) => {
         alert('Erro ao enviar respostas:', err);
-        setError('Erro ao enviar suas respostas. Tente novamente.');
+        setError('Erro ao enviar suas respostas. Tente novamente. aaaaaaaaaaaaaaaaaaaaaa');
     });
 };
 

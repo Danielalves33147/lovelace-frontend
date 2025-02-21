@@ -78,7 +78,7 @@ const UserProfile = () => {
       return;
     }
 
-    fetch("${import.meta.env.VITE_API_URL}/users")
+    fetch(`${import.meta.env.VITE_API_URL}/users`)
       .then((resp) => resp.json())
       .then((data) => {
         const userExists = data.some(

@@ -330,7 +330,8 @@ export default function Home() {
         </nav>
       </header>
       <section className={styles.mainContent}>
-        <img src="../../src/img/image 1.svg" alt="AdaLovelace" />
+      <img src="/img/image1.svg" alt="Ada Lovelace" />
+
         <div>
           <h1>Lovelace</h1>
           <p>
@@ -407,22 +408,22 @@ export default function Home() {
         </div>
         <div className={styles.cards}>
           <div>
-            <img src="/src/img/pexels-moh-adbelghaffar-771742.jpg" alt="" />
+            <img src="/img/pexels-moh-adbelghaffar-771742.jpg" alt="" />
             <p>Marcos Emanuel</p>
             <p>Ux/UI Designer</p>
           </div>
           <div>
-            <img src="/src/img/pexels-andrewperformance1-697509.jpg" alt="" />
+            <img src="/img/pexels-andrewperformance1-697509.jpg" alt="" />
             <p>Melkysedeke Costa</p>
             <p>Desenvolvedor Fullstack</p>
           </div>
           <div>
-            <img src="/src/img/pexels-olly-3785079.jpg" alt="" />
+            <img src="/img/pexels-olly-3785079.jpg" alt="" />
             <p>Daniel de Santana Alves</p>
             <p>Desenvolvedor Fullstack</p>
           </div>
           <div>
-            <img src="/src/img/pexels-olly-774909.jpg" alt="" />
+            <img src="/img/pexels-olly-774909.jpg" alt="" />
             <p>Lenade Barreto Santos Gil</p>
             <p>Orientadora</p>
           </div>

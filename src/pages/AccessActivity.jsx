@@ -76,23 +76,31 @@ const submitResponses = (e) => {
         },
         body: JSON.stringify(submission),
     })
-    .then(resp => {
+    .then(async resp => {
         if (!resp.ok) {
-            throw new Error('Erro ao enviar respostas.');
+            const errorMessage = await resp.text(); // Pega a resposta do servidor mesmo se não for JSON
+            throw new Error(`Erro ao enviar respostas: ${errorMessage}`);
         }
-        return resp.json();
+    
+        try {
+            return await resp.json(); // Verifica se o JSON é válido
+        } catch (jsonError) {
+            throw new Error("A resposta do servidor não está em formato JSON válido.");
+        }
     })
     .then(data => {
         console.log('Respostas enviadas:', data);
-        toast.alert('Respostas submetidas com sucesso!');
+        toast.success('Respostas submetidas com sucesso!');
         setTimeout(() => {
             navigate("/");
         }, 2000); 
     })
     .catch((err) => {
-        alert('Erro ao enviar respostas:', err);
-        setError('Erro ao enviar suas respostas. Tente novamente. aaaaaaaaaaaaaaaaaaaaaa');
+        console.error("Erro ao enviar respostas:", err.message);
+        toast.error("Erro ao enviar respostas: " + err.message);
+        setError("Erro ao enviar suas respostas. Tente novamente.");
     });
+    
 };
 
 if (error) {

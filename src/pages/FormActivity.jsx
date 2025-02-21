@@ -88,7 +88,7 @@ function FormActivity({ activity = null }) {
         const method = activity ? 'PUT' : 'POST';
         const url = activity 
             ? `${import.meta.env.VITE_API_URL}/activities/${activity.id}`
-            : '${import.meta.env.VITE_API_URL}/activities';
+            : `${import.meta.env.VITE_API_URL}/activities`;
 
         fetch(url, {
             method,

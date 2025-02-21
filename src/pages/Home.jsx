@@ -118,7 +118,7 @@ export default function Home() {
     const user = userCredential.user;
 
     // Verificação no banco de dados local se o email já está em uso
-    const response = await fetch('${import.meta.env.VITE_API_URL}/users');
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/users`);
     const users = await response.json();
 
     const userExists = users.some(u => u.email === email);
@@ -142,7 +142,7 @@ export default function Home() {
       uid: user.uid // Associando o UID gerado pelo Firebase
     };
 
-    const localResponse = await fetch('${import.meta.env.VITE_API_URL}/users', {
+    const localResponse = await fetch(`${import.meta.env.VITE_API_URL}/users`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -199,11 +199,11 @@ const ActivitySection = () => {
     function handleCreatePDFByAccessCode(accessCode) {
 
         fetch(`${import.meta.env.VITE_API_URL}/activities`)
-    .then(response => response.json())
-    .then(data => {
-        console.log("Atividades disponíveis no banco de dados:", data);
-    })
-    .catch(error => console.error("Erro ao buscar atividades:", error));
+        .then(response => response.json())
+        .then(data => {
+         console.log("Atividades disponíveis no banco de dados:", data);
+        })
+        .catch(error => console.error("Erro ao buscar atividades:", error));
 
 
         console.log("Código de acesso recebido:", accessCode);
@@ -215,16 +215,35 @@ const ActivitySection = () => {
         }
     
         // Encontra a atividade pelo código de acesso
-        const activity = db.activities.find(act => act.accessCode === accessCode);
-        if (!activity) {
-            toast.error("Atividade não encontrada com o código de acesso fornecido.");
-            return;
-        }
+        fetch(`${import.meta.env.VITE_API_URL}/activities`)
+        .then(response => response.json())
+        .then(data => {
+            console.log("Atividades disponíveis no banco de dados:", data);
+            console.log("Código de acesso recebido:", accessCode);
     
-        // Gera o PDF usando o `id` da atividade encontrada
-        const userId = "08b6"; // ID do usuário (ajuste conforme necessário)
-        generateActivityPDF(accessCode, userId); // Corrigido para passar o código de acesso
+            if (!accessCode) {
+                toast.warning("Por favor, insira o código de acesso.");
+                return;
+            }
+    
+            // Encontra a atividade pelo código de acesso dentro dos dados obtidos do backend
+            const activity = data.find(act => act.accessCode === accessCode);
+    
+            if (!activity) {
+                toast.error("Atividade não encontrada com o código de acesso fornecido.");
+                return;
+            }
+    
+            // Gera o PDF usando o `id` da atividade encontrada
+            const userId = "08b6"; // ID do usuário (ajuste conforme necessário)
+            generateActivityPDF(accessCode, userId);
+        })
+        .catch(error => {
+            console.error("Erro ao buscar atividades:", error);
+            toast.error("Erro ao carregar atividades do servidor.");
+        });
     }
+    
     
 
 

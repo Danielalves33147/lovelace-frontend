@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import styles from './AccessActivity.module.css';
 import TextArea from '../components/TextArea';
+import { toast } from 'sonner';
+
 
 function AccessActivity() {
     const { id } = useParams(); 
@@ -78,28 +80,29 @@ const submitResponses = (e) => {
     })
     .then(async resp => {
         if (!resp.ok) {
-            const errorMessage = await resp.text(); // Pega a resposta do servidor mesmo se não for JSON
+            const errorMessage = await resp.text();
             throw new Error(`Erro ao enviar respostas: ${errorMessage}`);
         }
     
         try {
-            return await resp.json(); // Verifica se o JSON é válido
+            return await resp.json();
         } catch (jsonError) {
             throw new Error("A resposta do servidor não está em formato JSON válido.");
         }
     })
     .then(data => {
-        console.log('Respostas enviadas:', data);
-        toast.success('Respostas submetidas com sucesso!');
+        console.log('✅ Respostas enviadas com sucesso:', data);
+        toast.success('✅ Respostas submetidas com sucesso!'); // 🔥 Agora funcionando corretamente!
         setTimeout(() => {
             navigate("/");
         }, 2000); 
     })
     .catch((err) => {
-        console.error("Erro ao enviar respostas:", err.message);
-        toast.error("Erro ao enviar respostas: " + err.message);
+        console.error("❌ Erro ao enviar respostas:", err.message);
+        toast.error("❌ Erro ao enviar respostas: " + err.message); // 🔥 Agora funcionando corretamente!
         setError("Erro ao enviar suas respostas. Tente novamente.");
     });
+    
     
 };
 
